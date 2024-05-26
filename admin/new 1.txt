@@ -1,0 +1,36 @@
+
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    permissions VARCHAR(255) DEFAULT '' -- Store permissions as comma-separated values
+);
+
+
+
+
+<?php
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['username']) || empty($_SESSION['permissions'])) {
+    header("Location: login.php"); // Redirect to login page if not logged in
+    exit();
+}
+
+// Function to check if the user has a specific permission
+function hasPermission($permission) {
+    $permissions = explode(',', $_SESSION['permissions']);
+    return in_array($permission, $permissions);
+}
+
+// Example usage:
+if (!hasPermission('edit_meeting')) {
+    // Redirect or display an error message if the user doesn't have permission
+    header("Location: unauthorized.php"); // Redirect to an unauthorized page
+    exit();
+}
+
+// Continue with your script...
+?>
